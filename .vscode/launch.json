@@ -10,6 +10,14 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Natsbench sss pred",
+            "type": "python",
+            "request": "launch",
+            "program": "${cwd}/natsbench_sss_pred.py",
+            "console": "integratedTerminal",
+            "args": []
         }
     ]
 }

@@ -107,14 +107,12 @@ if __name__ == '__main__':
         res['logmeasures']= measures
 
         if not args.noacc:
-            info = api.get_more_info(i, args.dataset, hp='200', is_random=False)
+            info = api.get_more_info(i, args.dataset, hp=90, is_random=False)
 
             trainacc = info['train-accuracy']
-            valacc   = info['valid-accuracy']
             testacc  = info['test-accuracy']
         
             res['trainacc']=trainacc
-            res['valacc']=valacc
             res['testacc']=testacc
         
         cached_res.append(res)

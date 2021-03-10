@@ -18,6 +18,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.autograd as autograd
 
+from typing import Tuple
+
 from . import measure
 from ..p_utils import get_layer_metric_array
 
@@ -44,7 +46,12 @@ def compute_grasp_per_weight(net, inputs, targets, mode, loss_fn, T=1, num_iters
         grad_w = None
         for _ in range(num_iters):
             #TODO get new data, otherwise num_iters is useless!
-            outputs = net.forward(inputs[st:en])/T
+            outputs = net.forward(inputs[st:en])
+            # natsbench sss produces (activation, logits) tuple
+            if isinstance(outputs, Tuple) and len(outputs) == 2:
+                outputs = outputs[1]
+            outputs = outputs/T
+
             loss = loss_fn(outputs, targets[st:en])
             grad_w_p = autograd.grad(loss, weights, allow_unused=True)
             if grad_w is None:
@@ -59,7 +66,12 @@ def compute_grasp_per_weight(net, inputs, targets, mode, loss_fn, T=1, num_iters
         en=(sp+1)*N//split_data
 
         # forward/grad pass #2
-        outputs = net.forward(inputs[st:en])/T
+        outputs = net.forward(inputs[st:en])
+        # natsbench sss produces (activation, logits) tuple
+        if isinstance(outputs, Tuple) and len(outputs) == 2:
+            outputs = outputs[1]
+        outputs = outputs/T
+        
         loss = loss_fn(outputs, targets[st:en])
         grad_f = autograd.grad(loss, weights, create_graph=True, allow_unused=True)
         

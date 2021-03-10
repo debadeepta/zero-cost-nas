@@ -15,6 +15,7 @@
 
 import torch
 import numpy as np
+from typing import Tuple
 
 from . import measure
 
@@ -27,6 +28,9 @@ def get_batch_jacobian(net, x, target, device, split_data):
         st=sp*N//split_data
         en=(sp+1)*N//split_data
         y = net(x[st:en])
+        # natsbench sss produces (activation, logits) tuple
+        if isinstance(y, Tuple):
+            y = y[1]
         y.backward(torch.ones_like(y))
 
     jacob = x.grad.detach()

@@ -15,6 +15,8 @@
 
 import torch
 
+from typing import Tuple
+
 from . import measure
 from ..p_utils import get_layer_metric_array
 
@@ -50,6 +52,12 @@ def compute_synflow_per_weight(net, inputs, targets, mode, split_data=1, loss_fn
     input_dim = list(inputs[0,:].shape)
     inputs = torch.ones([1] + input_dim).double().to(device)
     output = net.forward(inputs)
+    
+    # natsbench sss produces (activation, logits) tuple
+    if isinstance(output, Tuple) and len(output) == 2:
+        output = output[1]
+    
+
     torch.sum(output).backward() 
 
     # select the gradients that we want to use for search/prune

@@ -16,6 +16,8 @@
 import torch
 import torch.nn.functional as F
 
+from typing import Tuple
+
 from . import measure
 from ..p_utils import get_layer_metric_array
 
@@ -30,6 +32,10 @@ def compute_plain_per_weight(net, inputs, targets, mode, loss_fn, split_data=1):
         en=(sp+1)*N//split_data
 
         outputs = net.forward(inputs[st:en])
+        # natsbench sss produces (activation, logits) tuple
+        if isinstance(outputs, Tuple) and len(outputs) == 2:
+            outputs = outputs[1]
+            
         loss = loss_fn(outputs, targets[st:en])
         loss.backward()
 

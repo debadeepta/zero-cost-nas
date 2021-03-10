@@ -16,6 +16,8 @@
 import torch
 import torch.nn.functional as F
 
+from typing import Tuple
+
 import copy
 
 from . import measure
@@ -30,6 +32,9 @@ def get_grad_norm_arr(net, inputs, targets, loss_fn, split_data=1, skip_grad=Fal
         en=(sp+1)*N//split_data
 
         outputs = net.forward(inputs[st:en])
+        # natsbench sss produces (activation, logits) tuple
+        if isinstance(outputs, Tuple) and len(outputs) == 2:
+            outputs = outputs[1]
         loss = loss_fn(outputs, targets[st:en])
         loss.backward()
 

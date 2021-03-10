@@ -18,6 +18,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 import types
+from typing import Tuple
 
 from . import measure
 from ..p_utils import get_layer_metric_array, reshape_elements
@@ -85,6 +86,10 @@ def compute_fisher_per_weight(net, inputs, targets, loss_fn, mode, split_data=1)
 
         net.zero_grad()
         outputs = net(inputs[st:en])
+        # natsbench sss produces (activation, logits) tuple
+        if isinstance(outputs, Tuple) and len(outputs) == 2:
+            outputs = outputs[1]
+
         loss = loss_fn(outputs, targets[st:en])
         loss.backward()
 
