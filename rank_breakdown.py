@@ -8,7 +8,7 @@ MEASURES_LIST = ['fisher', 'grad_norm', 'grasp', 'jacob_cov', 'plain', 'snip', '
 
 if __name__ == '__main__':
     
-    filename = '.\\precomputed_results\\nasbench201_cifar10_subset_all_results.yaml'
+    filename = '.\\precomputed_results\\nasbench201_ImageNet16-120_subset_all_results.yaml'
     
     with open(filename, 'rb') as f:
         data = yaml.load(f, Loader=yaml.Loader)
@@ -83,4 +83,3 @@ if __name__ == '__main__':
     savename = '.\\precomputed_results\\raw_data.yaml'
     with open(savename, 'w') as f:
         yaml.dump(raw_data_dict, f)
-
